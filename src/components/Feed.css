@@ -1,15 +1,33 @@
 .feed { 
-  background-color: rgb(245, 245, 245);
+  /* background-color: rgb(245, 245, 245); */
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 }
 
 .feed__nav { 
   width: 100%;
+  border-bottom: 1px solid rgb(219, 219, 219);
+  display: flex;
+  justify-content: center;
 }
 
-.container {
+.feed__container {
   width: 100%;
-  max-width: 650px;
   display: flex;
+  justify-content: space-between;
+  height: 4rem;
+  align-items: center;
+  max-width: 975px;
+  padding: 0 1rem;
+}
+
+.container img {
+  object-fit: contain;
+}
+
+.feed__main {
+  width: 100%;
+  max-width: 975px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }

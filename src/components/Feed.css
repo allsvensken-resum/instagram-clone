@@ -31,3 +31,16 @@
   margin: 2rem auto;
   padding: 0 1rem;
 }
+
+.upload__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.upload__form input {
+  border: 1px solid rgb(219, 219, 219);
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.2rem;
+  border-radius: 3px;
+}

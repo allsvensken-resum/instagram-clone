@@ -34,6 +34,10 @@
   flex-wrap: nowrap;
 }
 
+.add__comment button:disabled {
+  color: rgba(0, 0, 255, 0.4);
+}
+
 .add__comment input {
   padding: 0;
   border: none;

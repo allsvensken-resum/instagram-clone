@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar } from '@material-ui/core';
 import './Post.css';
+import Comment from './Comment';
+import firebase from 'firebase';
+import { db } from '../firebase';
+import { useAuth } from '../contexts/AuthProvider';
 
-export default function Post({ userPost, userComment, caption }) {
+export default function Post({ userPost, caption, img, postID }) {
 
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState();
   const [comment, setComment] = useState('');
-  caption = 'I heer beer.'
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const unsubscribe = db.collection('posts').doc(postID).collection('comments')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot(snapshot => {
+        setComments(snapshot.docs.map(doc =>
+          <Comment key={doc.data().timestamp}
+            userComment={doc.data().userComment} comment={doc.data().comment} />
+        ))
+      })
+
+    return unsubscribe;
+  }, [])
 
   const handleAddComment = (e) => {
     e.preventDefault();
-    setComments([...comments, { userComment: userComment, comment: comment }]);
+    db.collection('posts').doc(postID).collection('comments').add({
+      userComment: user.email,
+      comment: comment,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+      .then(() =>
+        setComment(''))
   }
 
 
@@ -21,24 +44,19 @@ export default function Post({ userPost, userComment, caption }) {
         <p className='vertical-center font-weight-bold'>{userPost}</p>
       </div>
       <div className='post__content'>
-        <img src="https://i.insider.com/5f454a4242f43f001ddfee74?width=1100&format=jpeg&auto=webp" />
+        <img src={img} />
       </div>
       <div className="post__info">
         <div className="d-flex padding-lr-1 mt-3">
           <p className='mr-2 font-weight-bold'>{userPost}</p>
           <p>{caption}</p>
         </div>
-        { comments && 
-          comments.map(({userComment, comment}) => {
-            return (<div className="d-flex padding-lr-1 ">
-              <p className='mr-2 font-weight-bold'>{userComment}</p>
-              <p>{comment}</p>
-            </div>)
-          })
+        {
+          comments
         }
         <form className="add__comment padding-lr-1 padding-tb">
           <input value={comment} onChange={(e) => setComment(e.target.value)} className="w-100" placeholder='Add the comment'></input>
-          <button onClick={handleAddComment} className="button-link">Post</button>
+          <button disabled={!comment} onClick={handleAddComment} className="button-link">Post</button>
         </form>
       </div>
     </div>

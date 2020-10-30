@@ -72,7 +72,7 @@ export default function Feed() {
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then(dowloadURL => {
           db.collection('posts').add({
-            userPost: user.email,
+            userPost: user.displayName,
             caption: caption,
             img: dowloadURL,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()

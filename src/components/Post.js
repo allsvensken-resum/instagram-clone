@@ -14,7 +14,7 @@ export default function Post({ userPost, caption, img, postID }) {
 
   useEffect(() => {
     const unsubscribe = db.collection('posts').doc(postID).collection('comments')
-      .orderBy('timestamp', 'desc')
+      .orderBy('timestamp')
       .onSnapshot(snapshot => {
         setComments(snapshot.docs.map(doc =>
           <Comment key={doc.data().timestamp}
@@ -28,7 +28,7 @@ export default function Post({ userPost, caption, img, postID }) {
   const handleAddComment = (e) => {
     e.preventDefault();
     db.collection('posts').doc(postID).collection('comments').add({
-      userComment: user.email,
+      userComment: user.displayName,
       comment: comment,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })

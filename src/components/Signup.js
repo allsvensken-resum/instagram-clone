@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, Form, FormGroup, FormControl, FormLabel, Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthProvider';
+import firebase from 'firebase';
 
 const cardStyle = {
   margin: '100px auto',
@@ -18,6 +19,7 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const history = useHistory();
+  const [userName, setUserName] = useState('');
 
   const { signUp, user } = useAuth();
 
@@ -32,6 +34,9 @@ export default function Signup() {
       setError('');
       setLoading(true);
       await signUp(email, password);
+      firebase.auth().currentUser.updateProfile({
+        displayName: userName
+      })
       history.push('/');
     } catch (error) {
       setError(error.message);
@@ -52,15 +57,19 @@ export default function Signup() {
           <form>
             <FormGroup>
               <FormLabel>Email</FormLabel>
-              <FormControl type='email' value={email} onChange={(e) => setEmail(e.target.value)}></FormControl>
+              <FormControl required type='email' value={email} onChange={(e) => setEmail(e.target.value)}></FormControl>
+            </FormGroup>
+            <FormGroup>
+              <FormLabel>Username</FormLabel>
+              <FormControl required type='text' value={userName} onChange={(e) => setUserName(e.target.value)}></FormControl>
             </FormGroup>
             <FormGroup>
               <FormLabel>Password</FormLabel>
-              <FormControl type='password' value={password} onChange={(e) => setPassword(e.target.value)}></FormControl>
+              <FormControl required type='password' value={password} onChange={(e) => setPassword(e.target.value)}></FormControl>
             </FormGroup>
             <FormGroup>
               <FormLabel>Password confirmation</FormLabel>
-              <FormControl type='password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></FormControl>
+              <FormControl required type='password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></FormControl>
               <Button disabled={loading} onClick={handleSignUp} className='w-100 mt-3'>Sign up</Button>
             </FormGroup>
             <p className='mt-3 text-center'>Have an account ? <Link to='/login'>Log in</Link></p>

@@ -88,10 +88,10 @@ export default function Feed() {
     <div className='feed'>
       <nav className='feed__nav'>
         <div className='feed__container'>
-          <img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" />
-          <input className="form-control w-25 h-50" placeholder="Search" />
-          <div>
-            <Button onClick={() => handleOpen()} variant='primary' className='mr-3'>Upload</Button>
+          <img className="mr-1" src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" />
+          <input className="feed__search form-control w-25 h-50" placeholder="Search" />
+          <div className="feed__button">
+            <Button onClick={() => handleOpen()} variant='primary' className='mr-1'>Upload</Button>
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle><h5>Upload image</h5></DialogTitle>
               <DialogContent>

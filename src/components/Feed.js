@@ -5,8 +5,12 @@ import { useAuth } from '../contexts/AuthProvider';
 import { useHistory } from 'react-router-dom';
 import Post from './Post';
 import { db, storageRef } from '../firebase';
-import { Dialog, DialogTitle, DialogContent, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, TextField, LinearProgress } from '@material-ui/core';
 import firebase from 'firebase';
+
+const visibilityStyle = {
+  visibility: 'hidden'
+}
 
 export default function Feed() {
 
@@ -18,7 +22,8 @@ export default function Feed() {
   const [open, setOpen] = useState(false);
   const [caption, setCaption] = useState('');
   const fileRef = useRef(null);
-  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [buffer, setBuffer] = useState(10);
 
   useEffect(() => {
     const unsubscribe = db.collection('posts').orderBy('timestamp', 'desc')
@@ -63,7 +68,8 @@ export default function Feed() {
     setLoading(true);
     uploadTask.on('state_changed',
       (snapshot) => {
-
+        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setBuffer(progress + 10);
       },
 
       (error) => {
@@ -80,6 +86,7 @@ export default function Feed() {
           });
           setCaption('');
           setLoading(false);
+          setProgress(0);
           handleClose();
         })
       }
@@ -100,6 +107,7 @@ export default function Feed() {
       </nav>
       <div className="feed__main">
         <Dialog open={open} onClose={handleClose}>
+          {loading && <LinearProgress variant="determinate" value={progress} valueBuffer={buffer} />}
           <DialogTitle><h5>Upload image</h5></DialogTitle>
           <DialogContent>
             <form onSubmit={handleUpload} className='upload__form'>
@@ -113,7 +121,7 @@ export default function Feed() {
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
               />
-              <input type='file' ref={fileRef} required />
+              <input type='file' ref={fileRef} accept="image/*" required />
               <Button type="submit" className="" disabled={(!caption || loading)} >Post</Button>
             </form>
           </DialogContent>

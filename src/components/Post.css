@@ -1,5 +1,5 @@
 .post {
-  width: 100%;
+  width: 98%;
   max-width: 750px;
   border: 1px solid rgb(219, 219, 219);
   border-radius: 3px;
@@ -11,17 +11,15 @@
 .post__header {
   padding: 1rem;
   display: flex;
-  align-items: center;
   height: 4rem;
-  position: relative;
+  align-items: center;
 }
 
-.vertical-center {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 10%;
+.post__header p {
+  margin-left: .7rem;
+  margin-bottom: 0;
 }
+
 
 .post__content img {
   object-fit: contain;

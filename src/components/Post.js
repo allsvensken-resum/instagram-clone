@@ -40,8 +40,8 @@ export default function Post({ userPost, caption, img, postID }) {
   return (
     <div className='post'>
       <div className='post__header'>
-        <Avatar className='mr-3'></Avatar>
-        <p className='vertical-center font-weight-bold'>{userPost}</p>
+        <Avatar></Avatar>
+        <p className='font-weight-bold'>{userPost}</p>
       </div>
       <div className='post__content'>
         <img src={img} />

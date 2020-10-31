@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthProvider';
 
 const cardStyle = {
   margin: '100px auto',
-  width: '100%',
+  width: '90%',
   maxWidth: 450,
   padding: '2rem'
 }

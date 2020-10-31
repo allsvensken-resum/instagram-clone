@@ -54,7 +54,7 @@ export default function Signup() {
       <Card style={cardStyle}>
         <Card.Body>
           <img className="d-block mx-auto mb-3" src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png'></img>
-          <form>
+          <Form onSubmit={handleSignUp}>
             <FormGroup>
               <FormLabel>Email</FormLabel>
               <FormControl required type='email' value={email} onChange={(e) => setEmail(e.target.value)}></FormControl>
@@ -70,10 +70,10 @@ export default function Signup() {
             <FormGroup>
               <FormLabel>Password confirmation</FormLabel>
               <FormControl required type='password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></FormControl>
-              <Button disabled={loading} onClick={handleSignUp} className='w-100 mt-3'>Sign up</Button>
+              <Button disabled={loading} type='submit' className='w-100 mt-3'>Sign up</Button>
             </FormGroup>
             <p className='mt-3 text-center'>Have an account ? <Link to='/login'>Log in</Link></p>
-          </form>
+          </Form>
         </Card.Body>
       </Card>
     </>

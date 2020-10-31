@@ -30,7 +30,7 @@ export default function Login() {
     } catch (error) {
       setError(error.message);
     }
-    setLoading(false); 
+    setLoading(false);
     if (error) {
       alert(error);
     }
@@ -45,7 +45,7 @@ export default function Login() {
       <Card style={cardStyle}>
         <Card.Body>
           <img className="d-block mx-auto mb-3" src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png'></img>
-          <Form>
+          <Form onSubmit={handleSignIn}>
             <FormGroup>
               <FormLabel>Email</FormLabel>
               <FormControl value={email} onChange={(e) => { setEmail(e.target.value) }} type='email'></FormControl>
@@ -54,10 +54,9 @@ export default function Login() {
               <FormLabel>Password</FormLabel>
               <FormControl value={password} onChange={(e) => { setPassword(e.target.value) }} type='password'></FormControl>
             </FormGroup>
-            <Button disabled={loading} onClick={handleSignIn} className='w-100 mt-3'>Log in</Button>
+            <Button type="submit" disabled={loading} className='w-100 mt-3'>Log in</Button>
             <p className='mt-3 text-center'>Don't have an account ? <Link to='/signup'>Sign up</Link></p>
           </Form>
-          {user && <Button  variant='danger' onClick={handleSignOut} className='w-100 mt-3'>Log out</Button>}
         </Card.Body>
       </Card>
     </>

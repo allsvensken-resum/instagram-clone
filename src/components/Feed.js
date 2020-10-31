@@ -17,7 +17,8 @@ export default function Feed() {
   const [posts, setPosts] = useState();
   const [open, setOpen] = useState(false);
   const [caption, setCaption] = useState('');
-  const fileRef = useRef();
+  const fileRef = useRef(null);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const unsubscribe = db.collection('posts').orderBy('timestamp', 'desc')
@@ -59,7 +60,7 @@ export default function Feed() {
     const fileName = fileRef.current.files[0].name;
     const fullPath = `${basePath}/${Date.now()}-${fileName}`;
     const uploadTask = storageRef.child(fullPath).put(fileRef.current.files[0]);
-
+    setLoading(true);
     uploadTask.on('state_changed',
       (snapshot) => {
 
@@ -78,6 +79,7 @@ export default function Feed() {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           });
           setCaption('');
+          setLoading(false);
           handleClose();
         })
       }
@@ -91,31 +93,31 @@ export default function Feed() {
           <img className="mr-1" src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" />
           <input className="feed__search form-control w-25 h-50" placeholder="Search" />
           <div className="feed__button">
-            <Button onClick={() => handleOpen()} variant='primary' className='mr-1'>Upload</Button>
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle><h5>Upload image</h5></DialogTitle>
-              <DialogContent>
-                <form className='upload__form'>
-                  <TextField
-                    multiline
-                    rows={6}
-                    label="What is on your mind ? "
-                    style={{
-                      width: 500
-                    }}
-                    value={caption}
-                    onChange={(e) => setCaption(e.target.value)}
-                  />
-                  <input type='file' ref={fileRef} />
-                  <Button disabled={!caption} onClick={handleUpload}>Post</Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Button onClick={() => handleOpen()} className='mr-2' variant='primary'>Upload</Button>
             {user && <Button disabled={loading} onClick={handleSignOut} variant='danger'>Log out</Button>}
           </div>
         </div>
       </nav>
       <div className="feed__main">
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle><h5>Upload image</h5></DialogTitle>
+          <DialogContent>
+            <form onSubmit={handleUpload} className='upload__form'>
+              <TextField
+                multiline
+                rows={6}
+                label="What is on your mind ? "
+                style={{
+                  width: '100%'
+                }}
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+              />
+              <input type='file' ref={fileRef} required />
+              <Button type="submit" className="" disabled={(!caption || loading)} >Post</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
         {posts}
       </div>
     </div>

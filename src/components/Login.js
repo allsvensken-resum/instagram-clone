@@ -29,11 +29,9 @@ export default function Login() {
       history.push('/');
     } catch (error) {
       setError(error.message);
+      alert(error.message);
     }
     setLoading(false);
-    if (error) {
-      alert(error);
-    }
   }
 
   const handleSignOut = async () => {

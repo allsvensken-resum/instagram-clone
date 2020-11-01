@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthProvider';
 import firebase from 'firebase';
 
-const cardStyle = {
+export const cardStyle = {
   margin: '100px auto',
   width: '90%',
   maxWidth: 450,
@@ -40,13 +40,9 @@ export default function Signup() {
       history.push('/');
     } catch (error) {
       setError(error.message);
+      alert(error.message);
     }
     setLoading(false);
-    if (error) {
-      alert(error);
-    }
-
-
   }
 
   return (

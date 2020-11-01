@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthProvider from './contexts/AuthProvider';
 import Feed from './components/Feed';
 import ProtectedRoute from './components/ProtectedRoute';
+import UpdateProfile from './components/UpdateProfile';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path='/login' component={Login} />
             <Route path='/signup' component={Signup} />
             <ProtectedRoute exact path='/' component={Feed} />
+            <ProtectedRoute exact path='/update-profile' component={UpdateProfile} />
           </Switch>
         </AuthProvider>
       </Router>

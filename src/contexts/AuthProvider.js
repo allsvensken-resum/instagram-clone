@@ -11,6 +11,7 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const isSubscribed = true;
     const unsubscribe = auth.onAuthStateChanged(user => {
       setUser(user);
       setLoading(false);

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import './Feed.css';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthProvider';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import Post from './Post';
 import { db, storageRef } from '../firebase';
 import { Dialog, DialogTitle, DialogContent, TextField, LinearProgress } from '@material-ui/core';
@@ -102,6 +102,7 @@ export default function Feed() {
           <div className="feed__button">
             <Button onClick={() => handleOpen()} className='mr-2' variant='primary'>Upload</Button>
             {user && <Button disabled={loading} onClick={handleSignOut} variant='danger'>Log out</Button>}
+
           </div>
         </div>
       </nav>
@@ -110,6 +111,7 @@ export default function Feed() {
           {loading && <LinearProgress variant="determinate" value={progress} valueBuffer={buffer} />}
           <DialogTitle><h5>Upload image</h5></DialogTitle>
           <DialogContent>
+            <Link to='/update-profile'>Update profile</Link>
             <form onSubmit={handleUpload} className='upload__form'>
               <TextField
                 multiline

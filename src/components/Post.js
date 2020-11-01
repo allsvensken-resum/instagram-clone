@@ -3,7 +3,7 @@ import { Avatar } from '@material-ui/core';
 import './Post.css';
 import Comment from './Comment';
 import firebase from 'firebase';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { useAuth } from '../contexts/AuthProvider';
 
 export default function Post({ userPost, caption, img, postID }) {
@@ -40,7 +40,7 @@ export default function Post({ userPost, caption, img, postID }) {
   return (
     <div className='post'>
       <div className='post__header'>
-        <Avatar></Avatar>
+        <Avatar src={auth.currentUser.photoURL}></Avatar>
         <p className='font-weight-bold'>{userPost}</p>
       </div>
       <div className='post__content'>

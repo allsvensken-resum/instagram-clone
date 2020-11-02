@@ -5,9 +5,11 @@ export default function Comment({ userComment, comment }) {
 
   const [userName, setUserName] = useState('');
 
-  useEffect(async () => {
-    const userDocs = await db.collection('users').doc(userComment).get();
-    setUserName(userDocs.data().displayName);
+  useEffect(() => {
+    const unsubscribe = db.collection('users').doc(userComment).onSnapshot(userDocs => {
+      setUserName(userDocs.data().displayName);
+    });
+    
   }, [])
 
 

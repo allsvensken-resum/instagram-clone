@@ -14,13 +14,16 @@ export default function Post({ userPost, caption, img, postID }) {
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
 
-
-  useEffect(async () => {
-    const userDocs = await db.collection('users').doc(userPost).get();
-    setUserName(userDocs.data().displayName);
-    setUserImage(userDocs.data().photoURL);
+  //Listening for user update profile.
+  useEffect(() => {
+    const unsubscribe = db.collection('users').doc(userPost).onSnapshot(userDocs => {
+      setUserName(userDocs.data().displayName);
+      setUserImage(userDocs.data().photoURL);
+    })
+    return unsubscribe;
   }, [])
 
+  //Listening for comment data on the post.
   useEffect(() => {
     const unsubscribe = db.collection('posts').doc(postID).collection('comments')
       .orderBy('timestamp')

@@ -37,7 +37,7 @@ export default function Signup() {
       auth.currentUser.updateProfile({
         displayName: userName
       })
-      db.collection('users').add({
+      db.collection('users').doc(auth.currentUser.uid).set({
         displayName: userName,
         photoURL: '',
         email: email

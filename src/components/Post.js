@@ -11,44 +11,53 @@ export default function Post({ userPost, caption, img, postID }) {
   const [comments, setComments] = useState();
   const [comment, setComment] = useState('');
   const { user } = useAuth();
+  const [userName, setUserName] = useState('');
+
+
+  useEffect(async () => {
+    const userDocs = await db.collection('users').where('email', '==', userPost).get();
+    setUserName(userDocs.docs[0].data().displayName);
+  }, [])
 
   useEffect(() => {
     const unsubscribe = db.collection('posts').doc(postID).collection('comments')
       .orderBy('timestamp')
       .onSnapshot(snapshot => {
         setComments(snapshot.docs.map(doc =>
-          <Comment key={doc.data().timestamp}
-            userComment={doc.data().userComment} comment={doc.data().comment} />
+          <Comment userComment={doc.data().userComment} key={doc.data().timestamp} comment={doc.data().comment} />
         ))
       })
-
     return unsubscribe;
   }, [])
 
   const handleAddComment = (e) => {
     e.preventDefault();
     db.collection('posts').doc(postID).collection('comments').add({
-      userComment: user.displayName,
+      userComment: user.email,
       comment: comment,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
-      .then(() =>
-        setComment(''))
+      .then(() => {
+        console.log(comments);
+        setComment('')
+      }
+      )
   }
 
 
-  return (
+
+  return (userName &&
     <div className='post'>
       <div className='post__header'>
         <Avatar src={auth.currentUser.photoURL}></Avatar>
-        <p className='font-weight-bold'>{userPost}</p>
+        <p className='font-weight-bold'>{userName}</p>
       </div>
       <div className='post__content'>
         <img src={img} />
       </div>
       <div className="post__info">
         <div className="d-flex padding-lr-1 mt-3">
-          <p className='mr-2 font-weight-bold'>{userPost}</p>
+          <p className='mr-2 font-weight-bold'>{userName}</p>
           <p>{caption}</p>
         </div>
         {

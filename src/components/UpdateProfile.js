@@ -4,7 +4,7 @@ import { cardStyle } from './Signup';
 import { useAuth } from '../contexts/AuthProvider';
 import { Link, useHistory } from 'react-router-dom';
 import firebase from 'firebase';
-import { storageRef } from '../firebase';
+import { storageRef, db, auth } from '../firebase';
 import { LinearProgress } from '@material-ui/core';
 
 export default function UpdateProfile() {
@@ -41,9 +41,14 @@ export default function UpdateProfile() {
           firebase.auth().currentUser.updateProfile({
             ...newProfileObj,
             photoURL: dowloadURL
+          }).then(async () => {
+            const userDocs = await db.collection('users').doc(auth.currentUser.uid).update({
+              ...newProfileObj
+            })
           })
         })
         setLoading(false);
+        history.push('/');
       }
     )
   }

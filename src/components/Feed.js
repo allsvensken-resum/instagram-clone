@@ -4,13 +4,9 @@ import { Button } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthProvider';
 import { useHistory, Link } from 'react-router-dom';
 import Post from './Post';
-import { db, storageRef } from '../firebase';
+import { db, storageRef, auth } from '../firebase';
 import { Dialog, DialogTitle, DialogContent, TextField, LinearProgress } from '@material-ui/core';
 import firebase from 'firebase';
-
-const visibilityStyle = {
-  visibility: 'hidden'
-}
 
 export default function Feed() {
 
@@ -25,10 +21,15 @@ export default function Feed() {
   const [progress, setProgress] = useState(0);
   const [buffer, setBuffer] = useState(10);
 
+
+
   useEffect(() => {
     const unsubscribe = db.collection('posts').orderBy('timestamp', 'desc')
       .onSnapshot((snapshot) => {
-        setPosts(snapshot.docs.map(doc => <Post key={doc.data().timestamp} userPost={doc.data().userPost} postID={doc.id} img={doc.data().img} caption={doc.data().caption} />))
+        setPosts(snapshot.docs.map(doc => <Post key={doc.data().timestamp}
+          userPost={doc.data().userPost} postID={doc.id} img={doc.data().img} caption={doc.data().caption} />))
+        //Change from user post from string to user id.
+        //Query user display name from database.
       })
     return unsubscribe;
   }, [])
@@ -73,19 +74,19 @@ export default function Feed() {
       },
 
       (error) => {
-
+        setLoading(false);
       },
 
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then(dowloadURL => {
           db.collection('posts').add({
-            userPost: user.displayName,
+            userPost: user.email,
             caption: caption,
             img: dowloadURL,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           });
-          setCaption('');
           setLoading(false);
+          setCaption('');
           setProgress(0);
           handleClose();
         })
@@ -101,7 +102,7 @@ export default function Feed() {
           <input className="feed__search form-control w-25 h-50" placeholder="Search" />
           <div className="feed__button">
             <Button onClick={() => handleOpen()} className='mr-2' variant='primary'>Upload</Button>
-            {user && <Button disabled={loading} onClick={handleSignOut} variant='danger'>Log out</Button>}
+            {user && <Button onClick={handleSignOut} variant='danger'>Log out</Button>}
 
           </div>
         </div>
@@ -122,9 +123,10 @@ export default function Feed() {
                 }}
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
+                required
               />
               <input type='file' ref={fileRef} accept="image/*" required />
-              <Button type="submit" className="" disabled={(!caption || loading)} >Post</Button>
+              <Button type="submit" className="" disabled={loading} >Post</Button>
             </form>
           </DialogContent>
         </Dialog>

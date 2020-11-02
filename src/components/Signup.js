@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Form, FormGroup, FormControl, FormLabel, Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthProvider';
-import firebase from 'firebase';
+import { db, auth } from '../firebase';
 
 export const cardStyle = {
   margin: '100px auto',
@@ -34,8 +34,13 @@ export default function Signup() {
       setError('');
       setLoading(true);
       await signUp(email, password);
-      firebase.auth().currentUser.updateProfile({
+      auth.currentUser.updateProfile({
         displayName: userName
+      })
+      db.collection('users').add({
+        displayName: userName,
+        photoURL: '',
+        email: email
       })
       history.push('/');
     } catch (error) {

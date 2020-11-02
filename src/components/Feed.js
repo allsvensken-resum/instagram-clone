@@ -22,14 +22,12 @@ export default function Feed() {
   const [buffer, setBuffer] = useState(10);
 
 
-
+  //Listening to update post on feed.
   useEffect(() => {
     const unsubscribe = db.collection('posts').orderBy('timestamp', 'desc')
       .onSnapshot((snapshot) => {
         setPosts(snapshot.docs.map(doc => <Post key={doc.data().timestamp}
           userPost={doc.data().userPost} postID={doc.id} img={doc.data().img} caption={doc.data().caption} />))
-        //Change from user post from string to user id.
-        //Query user display name from database.
       })
     return unsubscribe;
   }, [])

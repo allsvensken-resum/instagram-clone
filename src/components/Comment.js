@@ -6,8 +6,8 @@ export default function Comment({ userComment, comment }) {
   const [userName, setUserName] = useState('');
 
   useEffect(async () => {
-    const userDocs = await db.collection('users').where('email', '==', userComment).get();
-    setUserName(userDocs.docs[0].data().displayName);
+    const userDocs = await db.collection('users').doc(userComment).get();
+    setUserName(userDocs.data().displayName);
   }, [])
 
 

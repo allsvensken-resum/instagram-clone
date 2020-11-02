@@ -12,11 +12,13 @@ export default function Post({ userPost, caption, img, postID }) {
   const [comment, setComment] = useState('');
   const { user } = useAuth();
   const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState('');
 
 
   useEffect(async () => {
-    const userDocs = await db.collection('users').where('email', '==', userPost).get();
-    setUserName(userDocs.docs[0].data().displayName);
+    const userDocs = await db.collection('users').doc(userPost).get();
+    setUserName(userDocs.data().displayName);
+    setUserImage(userDocs.data().photoURL);
   }, [])
 
   useEffect(() => {
@@ -33,12 +35,11 @@ export default function Post({ userPost, caption, img, postID }) {
   const handleAddComment = (e) => {
     e.preventDefault();
     db.collection('posts').doc(postID).collection('comments').add({
-      userComment: user.email,
+      userComment: auth.currentUser.uid,
       comment: comment,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
       .then(() => {
-        console.log(comments);
         setComment('')
       }
       )
@@ -49,7 +50,7 @@ export default function Post({ userPost, caption, img, postID }) {
   return (userName &&
     <div className='post'>
       <div className='post__header'>
-        <Avatar src={auth.currentUser.photoURL}></Avatar>
+        <Avatar src={userImage}></Avatar>
         <p className='font-weight-bold'>{userName}</p>
       </div>
       <div className='post__content'>

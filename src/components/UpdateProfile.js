@@ -43,7 +43,8 @@ export default function UpdateProfile() {
             photoURL: dowloadURL
           }).then(async () => {
             const userDocs = await db.collection('users').doc(auth.currentUser.uid).update({
-              ...newProfileObj
+              ...newProfileObj,
+              photoURL: dowloadURL
             })
           })
         })
